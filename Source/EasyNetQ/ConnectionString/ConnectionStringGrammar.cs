@@ -14,7 +14,7 @@ namespace EasyNetQ.ConnectionString
         public static Parser<string> Text = Parse.CharExcept(';').Many().Text();
         public static Parser<ushort> Number = Parse.Number.Select(ushort.Parse);
 
-        public static Parser<bool> Bool = (Parse.CaseInsensitiveString("true").Or(Parse.CaseInsensitiveString("false"))).Text().Select(x => x.ToLower() == "true");
+        public static Parser<bool> Bool = (Parse.IgnoreCase("true").Or(Parse.IgnoreCase("false"))).Text().Select(x => x.ToLower() == "true");
 
         public static Parser<HostConfiguration> Host =
             from host in Parse.Char(c => c != ':' && c != ';' && c != ',', "host").Many().Text()
@@ -61,7 +61,7 @@ namespace EasyNetQ.ConnectionString
             Expression<Func<ConnectionConfiguration, T>> getter)
         {
             return
-                from key in Parse.CaseInsensitiveString(keyName).Token()
+                from key in Parse.IgnoreCase(keyName).Token()
                 from separator in Parse.Char('=')
                 from value in valueParser
                 select (Func<ConnectionConfiguration, ConnectionConfiguration>)(c =>

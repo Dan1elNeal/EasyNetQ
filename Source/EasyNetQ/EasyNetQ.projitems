@@ -155,16 +155,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scheduling\ExternalScheduler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduling\IScheduler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduling\SchedulingExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\Failure.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\IFailure.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\Input.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\IResultOfT.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\ISuccess.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\Parse.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\ParseException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\ParserOfT.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\ResultHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sprache\Success.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimpleTypeNameSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SubscriptionResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemMessages\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SystemMessages\ScheduleMe.cs" />

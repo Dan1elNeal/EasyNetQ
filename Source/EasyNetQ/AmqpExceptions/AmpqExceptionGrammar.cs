@@ -11,7 +11,7 @@ namespace EasyNetQ.AmqpExceptions
         public static Parser<T> MakeIntegerElementParser<T>(string key) where T : AmqpExceptionIntegerValueElement, new()
         {
             return
-                from k in Parse.CaseInsensitiveString(key).Token()
+                from k in Parse.IgnoreCase(key).Token()
                 from eq in Parse.Char('=')
                 from value in Number
                 select new T { Value = value };
