@@ -8,24 +8,9 @@ namespace EasyNetQ
 {
     public class SimpleTypeNameSerializer : ITypeNameSerializer
     {
-        private readonly ConcurrentDictionary<string, Type> deserializedTypes = new ConcurrentDictionary<string, Type>();
+        static readonly Parser<string> typeParser;
 
-        public Type DeSerialize(string typeName)
-        {
-            Preconditions.CheckNotBlank(typeName, "typeName");
-
-            return deserializedTypes.GetOrAdd(typeName, t =>
-            {
-                var type = ParseTypeString(t);
-                if (type == null)
-                {
-                    throw new EasyNetQException("Cannot find type {0}", t);
-                }
-                return type;
-            });
-        }
-
-        private Type ParseTypeString(string typeString)
+        static SimpleTypeNameSerializer()
         {
             var typeCharParser = Parse.LetterOrDigit.Or(Parse.Chars("."));
 
@@ -48,7 +33,7 @@ namespace EasyNetQ
                 from assemblyName in typeNameParser
                 select typeName + genericMarker + numberOfGenerics + "," + assemblyName;
 
-            Parser<string> typeParser = null;
+            typeParser = null;
 
             var genericParameterParser =
                 from genericBegin in Parse.Char('[')
@@ -72,11 +57,29 @@ namespace EasyNetQ
                 from assemblyName in typeNameParser
                 select typeName + "`" + genericParameters.Item1 + "[" + genericParameters.Item2 + "]" + "," + assemblyName;
 
-
             typeParser = simpleTypeParser.Or(genericTypeParser).Or(emptyGenericTypeParser);
-            Type type = Type.GetType(typeParser.Parse(typeString));
+        }
 
-            return type;
+        private readonly ConcurrentDictionary<string, Type> deserializedTypes = new ConcurrentDictionary<string, Type>();
+
+        public Type DeSerialize(string typeName)
+        {
+            Preconditions.CheckNotBlank(typeName, "typeName");
+
+            return deserializedTypes.GetOrAdd(typeName, t =>
+            {
+                var type = ParseTypeString(t);
+                if (type == null)
+                {
+                    throw new EasyNetQException("Cannot find type {0}", t);
+                }
+                return type;
+            });
+        }
+
+        private Type ParseTypeString(string typeString)
+        {  
+            return Type.GetType(typeParser.Parse(typeString));
         }
 
         private readonly ConcurrentDictionary<Type, string> serializedTypes = new ConcurrentDictionary<Type, string>();
