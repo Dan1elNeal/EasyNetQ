@@ -63,7 +63,7 @@
     <Target Name="Merge" DependsOnTargets="Test">
       <Exec 
           WorkingDirectory="$(Net45OutputDir)" 
-          Command="$(ILRepack) /internalize /targetplatform:v4 /out:EasyNetQ.dll EasyNetQ.dll Newtonsoft.Json.dll" />
+          Command="$(ILRepack) /internalize /targetplatform:v4 /out:EasyNetQ.dll EasyNetQ.dll Newtonsoft.Json.dll Sprache.dll" />
     </Target>
 
 
