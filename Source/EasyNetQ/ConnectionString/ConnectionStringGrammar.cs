@@ -21,7 +21,7 @@ namespace EasyNetQ.ConnectionString
             from port in Parse.Char(':').Then(_ => Number).Or(Parse.Return((ushort)0))
             select new HostConfiguration { Host = host, Port = port };
 
-        public static Parser<IEnumerable<HostConfiguration>> Hosts = Host.ListDelimitedBy(',');
+        public static Parser<IEnumerable<HostConfiguration>> Hosts = Host.XDelimitedBy(Parse.Char(','));
 
         private static Uri result;
         public static Parser<Uri> AMQP = Parse.CharExcept(';').Many().Text().Where(x => Uri.TryCreate(x, UriKind.Absolute, out result)).Select(_ => new Uri(_));
@@ -53,7 +53,7 @@ namespace EasyNetQ.ConnectionString
                     return configuration;
                 }));
 
-        public static Parser<IEnumerable<UpdateConfiguration>> ConnectionStringBuilder = Part.ListDelimitedBy(';').Or(AMQPAlone.Once());
+        public static Parser<IEnumerable<UpdateConfiguration>> ConnectionStringBuilder = Part.XDelimitedBy(Parse.Char(';')).Or(AMQPAlone.Once());
 
         public static Parser<UpdateConfiguration> BuildKeyValueParser<T>(
             string keyName,
@@ -100,21 +100,6 @@ namespace EasyNetQ.ConnectionString
             return (Action<TContaining, TProperty>)
                 Delegate.CreateDelegate(typeof(Action<TContaining, TProperty>),
                     property.GetSetMethod());
-        }
-
-        public static IEnumerable<T> Cons<T>(this T head, IEnumerable<T> rest)
-        {
-            yield return head;
-            foreach (var item in rest)
-                yield return item;
-        }
-
-        public static Parser<IEnumerable<T>> ListDelimitedBy<T>(this Parser<T> parser, char delimiter)
-        {
-            return
-                from head in parser
-                from tail in Parse.Char(delimiter).Then(_ => parser).Many()
-                select head.Cons(tail);
         }
     }
 }

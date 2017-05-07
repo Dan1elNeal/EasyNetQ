@@ -37,7 +37,7 @@ namespace EasyNetQ.AmqpExceptions
             keyValueElement.Or(
             textElement))));
 
-        static readonly Parser<IEnumerable<IAmqpExceptionElement>> elements = element.ListDelimitedBy(',');
+        static readonly Parser<IEnumerable<IAmqpExceptionElement>> elements = element.XDelimitedBy(Parse.Char(','));
 
         static readonly Parser<AmapExceptionPreface> preface =
             from text in Parse.CharExcept(':').Many().Text()
